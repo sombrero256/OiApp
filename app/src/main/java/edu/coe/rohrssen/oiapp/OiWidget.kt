@@ -12,6 +12,13 @@ import android.widget.Toast
 
 class OiWidget : AppWidgetProvider() {
 
+    override fun onDeleted(context: Context?, appWidgetIds: IntArray?) {
+        super.onDeleted(context, appWidgetIds)
+        WidgetPrefsHelper.deleteMsgPref(context!!, appWidgetIds!![0])
+        WidgetPrefsHelper.deleteNamePref(context!!, appWidgetIds!![0])
+
+        }
+
     override fun onUpdate(
             context: Context,
             appWidgetManager: AppWidgetManager, appWidgetIds: IntArray

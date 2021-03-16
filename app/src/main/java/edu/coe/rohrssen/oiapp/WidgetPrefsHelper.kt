@@ -29,7 +29,6 @@ class WidgetPrefsHelper {
         fun loadNamePref(context: Context, appWidgetId: Int): String?{
             val prefs = context.getSharedPreferences(PREFS_NAME, 0)
             val nameValue = prefs.getString(PREF_PREFIX_KEY + appWidgetId + "_name", "No value found")
-            Log.i(LOGKEY, "in loadNamePref")
             return nameValue
         }
 
@@ -37,7 +36,6 @@ class WidgetPrefsHelper {
         fun loadMsgPref(context: Context, appWidgetId: Int): String?{
             val prefs = context.getSharedPreferences(PREFS_NAME, 0)
             val msgValue = prefs.getString(PREF_PREFIX_KEY + appWidgetId + "_msg", "No value found")
-            Log.i(LOGKEY, "in loadMsgPref")
             return msgValue
         }
 
