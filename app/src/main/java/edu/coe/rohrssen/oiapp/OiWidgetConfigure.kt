@@ -6,6 +6,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.Button
+import android.widget.EditText
 import androidx.appcompat.app.AppCompatActivity
 
 class OiWidgetConfigure : AppCompatActivity(), View.OnClickListener{
@@ -31,11 +32,16 @@ class OiWidgetConfigure : AppCompatActivity(), View.OnClickListener{
 
         // Push widget update to surface with newly set prefix
         val appWidgetManager = AppWidgetManager.getInstance(context)
-        // RandomWidget.updateTitle(context, appWidgetManager, mAppWidgetId, "");
 
         // Make sure we pass back the original appWidgetId
         val resultValue = Intent()
         resultValue.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, mAppWidgetId)
+        val number = findViewById<EditText>(R.id.editTextPhone).text.toString()
+        val msg = findViewById<EditText>(R.id.editTextMessage).text.toString()
+
+        resultValue.putExtra("Name", number)
+        resultValue.putExtra("Msg", msg)
+        
         setResult(RESULT_OK, resultValue)
         finish()
     }

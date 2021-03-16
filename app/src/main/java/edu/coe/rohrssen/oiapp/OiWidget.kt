@@ -5,6 +5,7 @@ import android.appwidget.AppWidgetManager
 import android.appwidget.AppWidgetProvider
 import android.content.Context
 import android.content.Intent
+import android.view.View
 import android.widget.RemoteViews
 import android.widget.Toast
 
@@ -25,11 +26,9 @@ class OiWidget : AppWidgetProvider() {
         val updateViews = RemoteViews(
                 context.packageName, R.layout.oiwidget_layout
         )
-        updateViews.setTextViewText(R.id.Name, "Myself")
-        updateViews.setTextViewText(R.id.Msg, "Oi, me!")
 
         Toast.makeText(context, "I AM HERE!", Toast.LENGTH_LONG).show()
-
+        
         val intentUpdate = Intent(context, OiWidget::class.java)
         intentUpdate.action = AppWidgetManager.ACTION_APPWIDGET_UPDATE
 
@@ -44,5 +43,18 @@ class OiWidget : AppWidgetProvider() {
         appWidgetManager.updateAppWidget(appWidgetId, updateViews)
 
     }
+
+    fun updateName(context: Context, appWidgetManager: AppWidgetManager, appWidgetId: Int, number:String){
+        val updateViews = RemoteViews(context.packageName, R.layout.oiwidget_layout)
+        updateViews.setTextViewText(R.id.Name, number)
+    }
+
+    fun updateMsg(context: Context, appWidgetManager: AppWidgetManager, appWidgetId: Int, msg:String){
+        val updateViews = RemoteViews(context.packageName, R.layout.oiwidget_layout)
+        updateViews.setTextViewText(R.id.Msg, "dick sucker")
+
+    }
+
+
 
 }
