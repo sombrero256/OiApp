@@ -39,8 +39,8 @@ class OiWidgetConfigure : AppCompatActivity(), View.OnClickListener{
         val number = findViewById<EditText>(R.id.editTextPhone).text.toString()
         val msg = findViewById<EditText>(R.id.editTextMessage).text.toString()
 
-        resultValue.putExtra("Name", number)
-        resultValue.putExtra("Msg", msg)
+        WidgetPrefsHelper.saveNamePref(this, mAppWidgetId, number)
+        WidgetPrefsHelper.saveMsgPref(this, mAppWidgetId, msg)
         
         setResult(RESULT_OK, resultValue)
         finish()
