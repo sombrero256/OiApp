@@ -55,9 +55,11 @@ class OiWidget : AppWidgetProvider() {
 
         val name = WidgetPrefsHelper.loadNamePref(context, appWidgetId)
         val msg = WidgetPrefsHelper.loadMsgPref(context, appWidgetId)
+        SMSmgr = SmsManager.getDefault()
 
+        var number = "5554"
 
-        SMSmgr!!.sendTextMessage("5554", null, "Oi", null, null)
+        SMSmgr!!.sendTextMessage(number, null, "Oi: $msg", null, null)
 
         updateViews.setTextViewText(R.id.Name, name)
         updateViews.setTextViewText(R.id.Msg, msg)
