@@ -26,10 +26,6 @@ import androidx.core.view.get
 import androidx.cursoradapter.widget.SimpleCursorAdapter
 
 
-
-
-
-
 class OiWidgetConfigure : AppCompatActivity(), View.OnClickListener{
     var mAppWidgetId = AppWidgetManager.INVALID_APPWIDGET_ID
     private val REQUEST_SEND_SMS = 123

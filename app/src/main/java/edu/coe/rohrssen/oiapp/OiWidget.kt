@@ -16,8 +16,6 @@ class OiWidget : AppWidgetProvider() {
     var SMSmgr: SmsManager? = null
     override fun onEnabled(context: Context?) {
         super.onEnabled(context)
-        SMSmgr = SmsManager.getDefault()
-
     }
 
     override fun onDeleted(context: Context?, appWidgetIds: IntArray?) {
