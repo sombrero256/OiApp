@@ -16,11 +16,13 @@ import android.text.TextWatcher
 import android.util.Log
 
 import android.view.View
+import android.view.ViewGroup
 
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.core.view.get
 import androidx.cursoradapter.widget.SimpleCursorAdapter
 
 
@@ -34,6 +36,9 @@ class OiWidgetConfigure : AppCompatActivity(), View.OnClickListener{
     var listView: ListView? = null
     var personName: EditText?= null
     var searchName: String = ""
+
+    var passPhoneNumber = ""
+    var passName = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -64,6 +69,10 @@ class OiWidgetConfigure : AppCompatActivity(), View.OnClickListener{
         });
         listView!!.setOnItemClickListener(object : AdapterView.OnItemClickListener{
             override fun onItemClick(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+
+                var vg = parent!![position] as ViewGroup
+                passPhoneNumber = findViewById<TextView>(android.R.id.text1).text.toString()
+                passName = vg.findViewById<TextView>(android.R.id.text2).text.toString()
             }
         })
     }
@@ -74,9 +83,9 @@ class OiWidgetConfigure : AppCompatActivity(), View.OnClickListener{
         // Make sure we pass back the original appWidgetId
         val resultValue = Intent()
         resultValue.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, mAppWidgetId)
-        val number = findViewById<EditText>(R.id.editTextPhone).text.toString()
         val msg = findViewById<EditText>(R.id.editTextMessage).text.toString()
-        WidgetPrefsHelper.saveNamePref(this, mAppWidgetId, number)
+        WidgetPrefsHelper.saveNamePref(this, mAppWidgetId, passName)
+        WidgetPrefsHelper.saveNumberPref(this, mAppWidgetId, passPhoneNumber)
         WidgetPrefsHelper.saveMsgPref(this, mAppWidgetId, msg)
         setResult(RESULT_OK, resultValue)
         finish()

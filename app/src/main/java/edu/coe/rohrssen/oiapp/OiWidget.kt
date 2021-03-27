@@ -24,7 +24,7 @@ class OiWidget : AppWidgetProvider() {
         super.onDeleted(context, appWidgetIds)
         WidgetPrefsHelper.deleteMsgPref(context!!, appWidgetIds!![0])
         WidgetPrefsHelper.deleteNamePref(context!!, appWidgetIds!![0])
-
+        WidgetPrefsHelper.deleteNamePref(context!!, appWidgetIds!![0])
         }
 
     @RequiresApi(Build.VERSION_CODES.KITKAT)
@@ -47,9 +47,9 @@ class OiWidget : AppWidgetProvider() {
 
         val name = WidgetPrefsHelper.loadNamePref(context, appWidgetId)
         val msg = WidgetPrefsHelper.loadMsgPref(context, appWidgetId)
-        SMSmgr = SmsManager.getDefault()
+        val number = WidgetPrefsHelper.loadNumberPref(context, appWidgetId)
 
-        var number = "5554"
+        SMSmgr = SmsManager.getDefault()
 
         SMSmgr!!.sendTextMessage(number, null, "Oi: $msg", null, null)
 
@@ -64,11 +64,8 @@ class OiWidget : AppWidgetProvider() {
         val pendingUpdate = PendingIntent.getBroadcast(
                 context, appWidgetId, intentUpdate,
                 PendingIntent.FLAG_UPDATE_CURRENT)
-
         updateViews.setOnClickPendingIntent(R.id.wholeWidget, pendingUpdate);
-
         appWidgetManager.updateAppWidget(appWidgetId, updateViews)
-
     }
 
 }

@@ -23,6 +23,13 @@ class WidgetPrefsHelper {
             prefs.apply()
             Log.i(LOGKEY, text)
         }
+        @JvmStatic
+        fun saveNumberPref(context: Context, appWidgetId: Int, text: String){
+            val prefs = context.getSharedPreferences(PREFS_NAME, 0).edit()
+            prefs.putString(PREF_PREFIX_KEY + appWidgetId + "_num", text)
+            prefs.apply()
+            Log.i(LOGKEY, text)
+        }
 
 
         @JvmStatic
@@ -39,7 +46,12 @@ class WidgetPrefsHelper {
             return msgValue
         }
 
-
+        @JvmStatic
+        fun loadNumberPref(context: Context, appWidgetId: Int): String?{
+            val prefs = context.getSharedPreferences(PREFS_NAME, 0)
+            val msgValue = prefs.getString(PREF_PREFIX_KEY + appWidgetId + "_num", "No value found")
+            return msgValue
+        }
 
         @JvmStatic
         fun deleteNamePref(context: Context, appWidgetId: Int){
@@ -51,6 +63,12 @@ class WidgetPrefsHelper {
         fun deleteMsgPref(context: Context, appWidgetId: Int){
             val prefs = context.getSharedPreferences(PREFS_NAME, 0).edit()
             prefs.remove(PREF_PREFIX_KEY + appWidgetId + "_msg")
+            prefs.apply()
+        }
+
+        fun deleteNumberPref(context: Context, appWidgetId: Int){
+            val prefs = context.getSharedPreferences(PREFS_NAME, 0).edit()
+            prefs.remove(PREF_PREFIX_KEY + appWidgetId + "_num")
             prefs.apply()
         }
 
