@@ -5,36 +5,77 @@ import android.appwidget.AppWidgetManager
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+
+import android.net.Uri
+
 import android.os.Bundle
+import android.provider.ContactsContract
+import android.text.Editable
+import android.text.TextWatcher
+import android.util.Log
+
 import android.view.View
-import android.widget.Button
-import android.widget.EditText
+
+import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.cursoradapter.widget.SimpleCursorAdapter
+
+
+
+
+
 
 class OiWidgetConfigure : AppCompatActivity(), View.OnClickListener{
     var mAppWidgetId = AppWidgetManager.INVALID_APPWIDGET_ID
     private val REQUEST_SEND_SMS = 123
+    var listView: ListView? = null
+    var personName: EditText?= null
+    var searchName: String = ""
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
+        setContentView(R.layout.oiconfigure_layout)
         // Find the widget id from the intent.
-        val intent: Intent = getIntent()
+
+        val intent: Intent = intent
         val extras = intent.extras
         if (extras != null) {
             mAppWidgetId = extras.getInt(
-                AppWidgetManager.EXTRA_APPWIDGET_ID, AppWidgetManager.INVALID_APPWIDGET_ID)
+                    AppWidgetManager.EXTRA_APPWIDGET_ID, AppWidgetManager.INVALID_APPWIDGET_ID)
         }
-        setContentView(R.layout.oiconfigure_layout)
         findViewById<Button>(R.id.saveButton).setOnClickListener(this)
-        if (ContextCompat.checkSelfPermission(this,
-                        Manifest.permission.SEND_SMS)
-                !== PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.SEND_SMS),
+
+        personName = findViewById(R.id.editTextPhone)
+        listView = findViewById(R.id.list)
+
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.SEND_SMS) != PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(this, Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.SEND_SMS, Manifest.permission.READ_CONTACTS),
                     REQUEST_SEND_SMS)
         }
+
+        personName!!.addTextChangedListener(object: TextWatcher {
+
+            override fun afterTextChanged(s: Editable) {
+                Log.i("MAIN", "Text changed")
+                searchName = personName!!.text.toString()
+                contacts
+            }
+
+            override fun beforeTextChanged(s: CharSequence, start:Int, count: Int, after: Int) {}
+            override fun onTextChanged(s: CharSequence, start:Int, before: Int, count: Int) {}
+        });
+
+        listView!!.setOnItemClickListener(object : AdapterView.OnItemClickListener{
+            override fun onItemClick(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                Toast.makeText(this@OiWidgetConfigure, "In onItemClick", Toast.LENGTH_SHORT).show()
+            }
+
+        })
+
     }
+
 
 
     override fun onClick(v: View?) {
@@ -55,4 +96,27 @@ class OiWidgetConfigure : AppCompatActivity(), View.OnClickListener{
         setResult(RESULT_OK, resultValue)
         finish()
     }
+
+    val contacts: Unit
+        get() {
+            // create cursor and query the data
+            searchName = personName!!.text.toString()
+
+
+            val uri: Uri = ContactsContract.CommonDataKinds.Phone.CONTENT_URI
+            //val cursor = contentResolver.query(uri, null, null, null, null)
+            val cursor = contentResolver.query(uri, null, "DISPLAY_NAME = '$searchName'", null, null)
+
+            val data = arrayOf(ContactsContract.CommonDataKinds.Phone.NUMBER, ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME)
+            val to = intArrayOf(android.R.id.text1, android.R.id.text2)
+
+            val adapter = SimpleCursorAdapter(this, android.R.layout.simple_list_item_2, cursor, data, to, 1)
+            listView!!.adapter = adapter
+
+        }
+
+
 }
+
+
+
