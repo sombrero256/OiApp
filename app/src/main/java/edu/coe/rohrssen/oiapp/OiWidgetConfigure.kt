@@ -5,6 +5,7 @@ import android.appwidget.AppWidgetManager
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.database.CursorWrapper
 
 import android.net.Uri
 
@@ -38,7 +39,6 @@ class OiWidgetConfigure : AppCompatActivity(), View.OnClickListener{
         super.onCreate(savedInstanceState)
         setContentView(R.layout.oiconfigure_layout)
         // Find the widget id from the intent.
-
         val intent: Intent = intent
         val extras = intent.extras
         if (extras != null) {
@@ -46,7 +46,6 @@ class OiWidgetConfigure : AppCompatActivity(), View.OnClickListener{
                     AppWidgetManager.EXTRA_APPWIDGET_ID, AppWidgetManager.INVALID_APPWIDGET_ID)
         }
         findViewById<Button>(R.id.saveButton).setOnClickListener(this)
-
         personName = findViewById(R.id.editTextPhone)
         listView = findViewById(R.id.list)
 
@@ -54,68 +53,45 @@ class OiWidgetConfigure : AppCompatActivity(), View.OnClickListener{
             ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.SEND_SMS, Manifest.permission.READ_CONTACTS),
                     REQUEST_SEND_SMS)
         }
-
         personName!!.addTextChangedListener(object: TextWatcher {
-
             override fun afterTextChanged(s: Editable) {
                 Log.i("MAIN", "Text changed")
                 searchName = personName!!.text.toString()
                 contacts
             }
-
             override fun beforeTextChanged(s: CharSequence, start:Int, count: Int, after: Int) {}
             override fun onTextChanged(s: CharSequence, start:Int, before: Int, count: Int) {}
         });
-
         listView!!.setOnItemClickListener(object : AdapterView.OnItemClickListener{
             override fun onItemClick(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-                Toast.makeText(this@OiWidgetConfigure, "In onItemClick", Toast.LENGTH_SHORT).show()
             }
-
         })
-
     }
-
-
-
     override fun onClick(v: View?) {
         val context: Context = this@OiWidgetConfigure
-
         // Push widget update to surface with newly set prefix
         val appWidgetManager = AppWidgetManager.getInstance(context)
-
         // Make sure we pass back the original appWidgetId
         val resultValue = Intent()
         resultValue.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, mAppWidgetId)
         val number = findViewById<EditText>(R.id.editTextPhone).text.toString()
         val msg = findViewById<EditText>(R.id.editTextMessage).text.toString()
-
         WidgetPrefsHelper.saveNamePref(this, mAppWidgetId, number)
         WidgetPrefsHelper.saveMsgPref(this, mAppWidgetId, msg)
-        
         setResult(RESULT_OK, resultValue)
         finish()
     }
-
     val contacts: Unit
         get() {
             // create cursor and query the data
             searchName = personName!!.text.toString()
-
-
             val uri: Uri = ContactsContract.CommonDataKinds.Phone.CONTENT_URI
-            //val cursor = contentResolver.query(uri, null, null, null, null)
             val cursor = contentResolver.query(uri, null, "DISPLAY_NAME = '$searchName'", null, null)
-
             val data = arrayOf(ContactsContract.CommonDataKinds.Phone.NUMBER, ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME)
             val to = intArrayOf(android.R.id.text1, android.R.id.text2)
-
             val adapter = SimpleCursorAdapter(this, android.R.layout.simple_list_item_2, cursor, data, to, 1)
             listView!!.adapter = adapter
-
         }
-
-
 }
 
 
